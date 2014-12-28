@@ -32,20 +32,35 @@ public class TheMoneyExample {
 		assertEquals(Money.franc(10), five.times(2));
 		assertEquals(Money.franc(15), five.times(3));
 	}
+	
+	@Test
+	public void testCurrency() {
+		assertEquals("USD", Money.dollar(1).currency());
+		assertEquals("CHF", Money.franc(1).currency());
+	}
 }
 
 abstract class Money {
 	
 	protected int amount;
 	
+	protected String currency;
+	
+	abstract String currency();
+	
 	abstract Money times(int multiplier);
 	
-	static Dollar dollar(int amount) {
-		return new Dollar(amount);
+	static Money dollar(int amount) {
+		return new Dollar(amount, "USD");
 	}
 	
-	static Franc franc(int amount) {
-		return new Franc(amount);
+	static Money franc(int amount) {
+		return new Franc(amount, "CHF");
+	}
+	
+	Money(int amount, String currency) {
+		this.amount = amount;
+		this.currency = currency;
 	}
 	
 	public boolean equals(Object object) {
@@ -57,24 +72,30 @@ abstract class Money {
 
 class Dollar extends Money {
 	
-	Dollar(int amount) {
-		this.amount = amount;
+	Dollar(int amount, String currency) {
+		super(amount, currency);
 	}
 	
 	Money times(int multiplier) {
-		return new Dollar (amount * multiplier);
+		return Money.dollar(amount * multiplier);
 	}
 	
+	String currency() {
+		return currency;
+	}
 }
 
 class Franc extends Money {
 			
-	Franc(int amount) {
-		this.amount = amount;
+	Franc(int amount, String currency) {
+		super(amount, currency);
 	}
 	
 	Money times(int multiplier) {
-		return new Franc (amount * multiplier);
+		return Money.franc(amount * multiplier);
 	}
-
+	
+	String currency() {
+		return currency;
+	}
 }
