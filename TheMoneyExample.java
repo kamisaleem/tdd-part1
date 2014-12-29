@@ -54,15 +54,58 @@ public class TheMoneyExample {
 		Money reduced = bank.reduce(sum, "USD");
 		assertEquals(Money.dollar(10), reduced);
 	}
+	
+	@Test
+	public void testPlusReturnsSum() {
+		Money five = Money.dollar(5);
+		Expression results = five.plus(five);
+		Sum sum = (Sum) results;
+		assertEquals(five, sum.augend);
+		assertEquals(five, sum.addend);
+	}
+	
+	@Test
+	public void testReduceSum() {
+		Expression sum = new Sum(Money.dollar(3), Money.dollar(4));
+		Bank bank = new Bank();
+		Money result = bank.reduce(sum, "USD");
+		assertEquals(Money.dollar(7), result);
+	}
+	
+	@Test
+	public void testReduceMoney() {
+		Bank bank = new Bank();
+		Money result = bank.reduce(Money.dollar(1), "USD");
+		assertEquals(Money.dollar(1), result);
+	}
+}
+
+class Sum implements Expression {
+	
+	Money augend;
+	Money addend;
+	
+	Sum(Money augend, Money addend) {
+		this.augend = augend;
+		this.addend = addend;
+	}
+	
+	public Money reduce(String to) {
+		int amount = augend.amount + addend.amount;
+		return new Money(amount, to);
+	}
 }
 
 class Bank {
 	Money reduce(Expression source, String to) {
-		return Money.dollar(10);
+
+		return source.reduce(to);
 	}
 }
 
 interface Expression {
+	
+	Money reduce(String to);
 	
 }
 
@@ -95,7 +138,11 @@ class Money implements Expression {
 	}
 	
 	Expression plus(Money addend) {
-		return new Money(amount + addend.amount, currency);
+		return new Sum(this, addend);
+	}
+	
+	public Money reduce(String to) {
+		return this;
 	}
 	
 	String currency() {
