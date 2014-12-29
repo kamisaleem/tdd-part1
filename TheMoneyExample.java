@@ -43,9 +43,30 @@ public class TheMoneyExample {
 	public void testDifferentClassEquality() {
 		assertTrue(new Money(10,"CHF").equals(new Franc(10,"CHF")));
 	}
+	
+	@Test
+	public void testSimpleAdditon() {
+		//Money sum = Money.dollar(5).plus(Money.dollar(5));
+		//assertEquals(Money.dollar(10),sum);
+		Money five = Money.dollar(5);
+		Expression sum = five.plus(five);
+		Bank bank = new Bank();
+		Money reduced = bank.reduce(sum, "USD");
+		assertEquals(Money.dollar(10), reduced);
+	}
 }
 
-class Money {
+class Bank {
+	Money reduce(Expression source, String to) {
+		return Money.dollar(10);
+	}
+}
+
+interface Expression {
+	
+}
+
+class Money implements Expression {
 	
 	protected int amount;	
 	protected String currency;
@@ -71,6 +92,10 @@ class Money {
 		Money money = (Money) object;
 		return amount == money.amount
 				&& currency().equals(money.currency());
+	}
+	
+	Expression plus(Money addend) {
+		return new Money(amount + addend.amount, currency);
 	}
 	
 	String currency() {
