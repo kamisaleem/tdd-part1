@@ -97,8 +97,8 @@ class Sum implements Expression {
 }
 
 class Bank {
+	
 	Money reduce(Expression source, String to) {
-
 		return source.reduce(to);
 	}
 }
@@ -161,17 +161,17 @@ class Dollar extends Money {
 		super(amount, currency);
 	}
 	
-	static Money dollar(int amount) {
-		return new Money(amount, "USD");
-	}
+//	static Money dollar(int amount) {
+//		return new Money(amount, "USD");
+//	}
 	
-	Money times(int multiplier) {
-		return new Money(amount * multiplier, currency);
-	}
-	
-	String currency() {
-		return currency;
-	}
+//	Money times(int multiplier) {
+//		return new Money(amount * multiplier, currency);
+//	}
+//	
+//	String currency() {
+//		return currency;
+//	}
 }
 
 class Franc extends Money {
@@ -180,15 +180,15 @@ class Franc extends Money {
 		super(amount, currency);
 	}
 	
-	static Money franc(int amount) {
-		return new Money(amount, "CHF");
-	}
+//	static Money franc(int amount) {
+//		return new Money(amount, "CHF");
+//	}
 		
-	Money times(int multiplier) {
-		return new Money(amount * multiplier, currency);
-	}
-	
-	String currency() {
-		return currency;
-	}
+//	Money times(int multiplier) {
+//		return new Money(amount * multiplier, currency);
+//	}
+//	
+//	String currency() {
+//		return currency;
+//	}
 }
