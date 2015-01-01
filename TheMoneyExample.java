@@ -1,6 +1,8 @@
 package com.sibisoft.northstar.tdd;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -78,117 +80,25 @@ public class TheMoneyExample {
 		Money result = bank.reduce(Money.dollar(1), "USD");
 		assertEquals(Money.dollar(1), result);
 	}
-}
-
-class Sum implements Expression {
 	
-	Money augend;
-	Money addend;
-	
-	Sum(Money augend, Money addend) {
-		this.augend = augend;
-		this.addend = addend;
+	@Test
+	public void testReduceMoneyDifferentCurrency() {
+		Bank bank = new Bank();
+		bank.addRate("CHF","USD", 2);
+		Money result = bank.reduce(Money.franc(2),"USD");
+		assertEquals(Money.dollar(1), result);
 	}
 	
-	public Money reduce(String to) {
-		int amount = augend.amount + addend.amount;
-		return new Money(amount, to);
+	@Test
+	public void testArrayEquals() {
+		assertEquals(new Object[]{"abc"}, new Object[]{"abc"});
 	}
-}
-
-class Bank {
 	
-	Money reduce(Expression source, String to) {
-		return source.reduce(to);
+	@Test
+	public void testIdentityRate() {
+		assertEquals(1, new Bank().rate("USD", "USD"));
 	}
-}
-
-interface Expression {
-	
-	Money reduce(String to);
 	
 }
 
-class Money implements Expression {
-	
-	protected int amount;	
-	protected String currency;
-	
-	Money(int amount, String currency) {
-		this.amount = amount;
-		this.currency = currency;
-	}
-	
-	static Money dollar(int amount) {
-		return new Dollar(amount, "USD");
-	}
-	
-	static Money franc(int amount) {
-		return new Franc(amount, "CHF");
-	}
 
-	Money times(int multiplier) {
-		return new Money(amount * multiplier, currency);
-	}
-	
-	public boolean equals(Object object) {
-		Money money = (Money) object;
-		return amount == money.amount
-				&& currency().equals(money.currency());
-	}
-	
-	Expression plus(Money addend) {
-		return new Sum(this, addend);
-	}
-	
-	public Money reduce(String to) {
-		return this;
-	}
-	
-	String currency() {
-		return currency;
-	}
-	
-	public String toString() {
-		return amount + " " + currency;
-	}
-}
-
-
-class Dollar extends Money {
-	
-	Dollar(int amount, String currency) {
-		super(amount, currency);
-	}
-	
-//	static Money dollar(int amount) {
-//		return new Money(amount, "USD");
-//	}
-	
-//	Money times(int multiplier) {
-//		return new Money(amount * multiplier, currency);
-//	}
-//	
-//	String currency() {
-//		return currency;
-//	}
-}
-
-class Franc extends Money {
-		
-	Franc(int amount, String currency) {
-		super(amount, currency);
-	}
-	
-//	static Money franc(int amount) {
-//		return new Money(amount, "CHF");
-//	}
-		
-//	Money times(int multiplier) {
-//		return new Money(amount * multiplier, currency);
-//	}
-//	
-//	String currency() {
-//		return currency;
-//	}
-}
