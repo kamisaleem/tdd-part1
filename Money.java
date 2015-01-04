@@ -17,20 +17,6 @@ public class Money implements Expression {
 	static Money franc(int amount) {
 		return new Franc(amount, "CHF");
 	}
-
-	Expression times(int multiplier) {
-		return new Money(amount * multiplier, currency);
-	}
-	
-	public boolean equals(Object object) {
-		Money money = (Money) object;
-		return amount == money.amount
-				&& currency().equals(money.currency());
-	}
-	
-	public Expression plus(Expression addend) {
-		return new Sum(this, addend);
-	}
 	
 	@Override
 	public Money reduce(Bank bank, String to) {
@@ -38,6 +24,20 @@ public class Money implements Expression {
 		//return new Money(amount/rate, to);
 		int rate = bank.rate(currency, to);
 		return new Money(amount/rate, to);
+	}
+	
+	public Expression plus(Expression addend) {
+		return new Sum(this, addend);
+	}
+	
+	public Expression times(int multiplier) {
+		return new Money(amount * multiplier, currency);
+	}
+	
+	public boolean equals(Object object) {
+		Money money = (Money) object;
+		return amount == money.amount
+				&& currency().equals(money.currency());
 	}
 	
 	String currency() {
